@@ -1,9 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navbar-w: 260px;
+  --navbar-w-mobile: 72px;
+  --border-r: 12px;           /* Reduced from 16px - less pill-like */
+  --border-r-lg: 20px;        /* For main pane only */
+  --navbar-bg: #0f172a;
+  --page-bg: #0f172a;
+  --pane-bg: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --accent: #3b82f6;
+  --danger: #ef4444;
+  --success: #10b981;
+  --padding: 0.75rem;         /* Smaller */
+  --padding-lg: 1.5rem;
+  --title-size: 2rem;
+  --desc-size: 1rem;
+
 }
+
+
+.rounded { border-radius: var(--border-r); }
+.rounded-lg { border-radius: var(--border-r-lg); }
+.rounded-full { border-radius: 9999px; } /* Only for small elements */
 
 @theme inline {
   --color-background: var(--background);
@@ -12,15 +32,22 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+} */
+
+* { 
+  box-sizing: border-box; 
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--page-bg) !important;  /* Full screen dark */
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
 }
