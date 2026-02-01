@@ -43,6 +43,15 @@ export default function Navbar() {
       <div className="flex-1 flex flex-col gap-2 lg:gap-2">
         <NavLink href="/" icon="🏠" label="Home" />
         <NavLink href="/recipes" icon="🍳" label="Recipes" />
+
+        {user?.isChef && (
+          <NavLink
+            href="/create"
+            icon="👨‍🍳"
+            label="Create Recipe"
+          />
+        )}
+
         <NavLink href="/favorites" icon="❤️" label="Favorites" />
         <NavLink href="/calculator" icon="🧮" label="Calculator" disabled />
         <NavLink href="/community" icon="👥" label="Community" disabled />
@@ -81,10 +90,10 @@ export default function Navbar() {
                 👋 {user.firstName}
               </div>
               <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold ${user.role === 'chef'
-                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                  : 'bg-blue-100 text-blue-800 border border-blue-200'
+                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                : 'bg-blue-100 text-blue-800 border border-blue-200'
                 }`}>
-                {user.role === 'chef' ? '👨‍🍳 Master Chef' : '🍳 Home Cook'}
+                {user.isChef? '👨‍🍳 Master Chef' : '🍳 Home Cook'}
               </div>
             </div>
 

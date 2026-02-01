@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     const savedUser = localStorage.getItem('currentUser');
-    
+
     if (token && savedUser) {
       try {
         const userData = JSON.parse(savedUser);
@@ -29,16 +29,22 @@ export function AuthProvider({ children }) {
       const response = await fetch(
         `https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen/users?email=${email}&password=${password}`
       );
-      
+
       if (response.ok) {
         const users = await response.json();
         if (users.length > 0) {
           const userData = users[0];
+
+          // FIX: Normalize role to isChef boolean for frontend
+          const normalizedUser = {
+            ...userData,
+            isChef: userData.isChef === true || userData.role === 'chef' // Handle both cases
+          };
+
           const token = `${email}${password}`;
-          
           localStorage.setItem('authToken', token);
-          localStorage.setItem('currentUser', JSON.stringify(userData));
-          setUser(userData);
+          localStorage.setItem('currentUser', JSON.stringify(normalizedUser));
+          setUser(normalizedUser);
           return { success: true };
         }
       }
@@ -50,19 +56,26 @@ export function AuthProvider({ children }) {
 
   const signup = async (userData) => {
     try {
+      // FIX: Convert role string to isChef boolean
+      const normalizedUserData = {
+        ...userData,
+        isChef: userData.isChef === 'chef', // true/false boolean
+        role: undefined // Remove role field
+      };
+
       const response = await fetch(
         'https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen/users',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(normalizedUserData),
         }
       );
-      
+
       if (response.ok) {
         const newUser = await response.json();
         const token = `${userData.email}${userData.password}`;
-        
+
         localStorage.setItem('authToken', token);
         localStorage.setItem('currentUser', JSON.stringify(newUser));
         setUser(newUser);
@@ -81,12 +94,12 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      login, 
-      signup, 
-      logout, 
-      loading 
+    <AuthContext.Provider value={{
+      user,
+      login,
+      signup,
+      logout,
+      loading
     }}>
       {children}
     </AuthContext.Provider>

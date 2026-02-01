@@ -267,7 +267,12 @@ function RecipeCard({ recipe, isAuth, onRecipeClick }) {
     >
       {/* Image */}
       <div className="w-full h-40 md:h-48 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl mb-6 flex items-center justify-center text-sm text-gray-500 border-2 border-dashed border-blue-200 group-hover:border-blue-300 transition-colors">
-        [IMAGE: {recipe.image}]
+        <img
+          src={recipe.image}
+          alt="Card Img Preview"
+          className="w-full h-full object-cover"
+          onError={(e) => e.target.src = '/placeholder-recipe.jpg'}
+        />
       </div>
 
       {/* Content */}
