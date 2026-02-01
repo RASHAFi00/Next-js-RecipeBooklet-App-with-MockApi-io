@@ -1,9 +1,9 @@
 const API_BASE = 'https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen';
 
-export async function fetchRecipes(filters = {}) {
+export async function fetchRecipes(filters = {}, page = 1, limit = null) {
   const params = new URLSearchParams();
   
-  // Transform display rating (0-5) → MockAPI rating (0-100)
+  // Your existing filters (unchanged)
   if (filters.rating && filters.rating !== '') {
     const mockApiRating = Math.round(parseFloat(filters.rating) * 20);
     params.append('rating', mockApiRating.toString());
@@ -14,20 +14,32 @@ export async function fetchRecipes(filters = {}) {
   if (filters.orderBy) params.append('orderBy', filters.orderBy);
   if (filters.order) params.append('order', filters.order);
 
+  // ADD PAGINATION PARAMS
+  params.append('page', page.toString());
+  if (limit) params.append('limit', limit.toString());
+  
   const url = `${API_BASE}/recipes?${params}`;
   console.log('Fetching:', url);
   
   const response = await fetch(url);
   if (!response.ok) {
-    if (response.status === 404) return []; // Empty results = no match
+    if (response.status === 404) return { data: [], total: 0 };
     throw new Error(`HTTP ${response.status}`);
   }
   
   const data = await response.json();
   
-  // Transform MockAPI rating (1-100) → Display rating (1-5)
-  return data.map(recipe => ({
+  // Transform ratings (unchanged)
+  const transformedData = data.map(recipe => ({
     ...recipe,
-    displayRating: (recipe.rating / 20).toFixed(1) // 80 → 4.0⭐
+    displayRating: (recipe.rating / 20).toFixed(1)
   }));
+
+  // MockAPI pagination response format
+  return {
+    data: transformedData,
+    total: data.length * page, // Approximate total, or use header if available
+    page,
+    limit
+  };
 }

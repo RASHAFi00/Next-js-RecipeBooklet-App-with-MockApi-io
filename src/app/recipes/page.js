@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [filterLoading, setFilterLoading] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
@@ -15,21 +17,44 @@ export default function RecipesPage() {
     orderBy: 'rating',
     order: 'desc'
   });
-  const [page, setPage] = useState(1);
-  const debounceRef = useRef(null);
   const router = useRouter();
   const { user } = useAuth();
+
+
+  const loadRecipes = useCallback(async (page = 1, appliedFilters = filters) => {
+    setLoading(true);
+
+    try {
+      let data;
+      data = await fetchRecipes(appliedFilters, 1);
+      if (page === 1) {
+        const estimatedTotal = data.total;
+        data.data = Array.from(data.data || []).filter(recipe => recipe && recipe.id).slice(0, 25)
+        setTotalPages(Math.ceil(estimatedTotal / 25));
+      } else {
+        data = await fetchRecipes(appliedFilters, page, 25);
+      }
+      setRecipes(Array.isArray(data) ? data : (data.data || []));
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('Failed to fetch:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
 
   // Debounced filter apply
   const applyFilters = useCallback(() => {
     setFilterLoading(true);
     setRecipes([]);
-    setPage(1);
+    setCurrentPage(1);
+
 
     fetchRecipes(filters)
       .then(data => {
-        setRecipes(data);
-        setPage(2);
+        setRecipes(data.data);
+        setCurrentPage(1);
       })
       .catch(err => {
         console.error('Filter error (ignored):', err.message); // SILENT FAIL
@@ -38,32 +63,18 @@ export default function RecipesPage() {
       .finally(() => setFilterLoading(false));
   }, [filters]);
 
-  // Load more (pagination)
-  const loadMore = useCallback(() => {
-    setLoading(true);
-    fetchRecipes({ ...filters, page })
-      .then(data => setRecipes(prev => [...prev, ...data]))
-      .catch(err => console.error('Load more failed:', err))
-      .finally(() => setLoading(false));
-  }, [filters, page]);
 
-  // Initial load
   useEffect(() => {
-    console.log('useEffect running...');
-    fetchRecipes()
-      .then(data => {
-        setRecipes(data);
-        setPage(2);
-      })
-      .catch(err => console.error('Initial load failed:', err))
-      .finally(() => setLoading(false));
-  }, []);
+    loadRecipes(currentPage);
+  }, [currentPage, fetchRecipes]);
 
   const navigateToRecipe = (recipe) => {
     sessionStorage.setItem('allRecipes', JSON.stringify(recipes));
+    sessionStorage.setItem('currentPage', currentPage.toString());
     router.push(`/recipes/${recipe.id}`);
   };
 
+  console.log(totalPages);
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 h-full max-w-7xl mx-auto p-4">
       {/* FILTERS - Full width mobile, sidebar desktop */}
@@ -165,13 +176,55 @@ export default function RecipesPage() {
           </div>
         )}
 
-        {/* Load More */}
-        <div className="text-center py-8 lg:py-12">
-          <button onClick={loadMore} disabled={loading}
-            className="px-6 lg:px-8 py-2.5 lg:py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-medium transition-all shadow-lg disabled:opacity-50">
-            {loading ? 'Loading...' : 'Load More'}
-          </button>
-        </div>
+
+        {/* pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12 p-6">
+            {/* Previous Button */}
+            <button
+              onClick={() => loadRecipes(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1 || loading}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              ← Previous
+            </button>
+
+            {/* Page Numbers */}
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              const pageNum = Math.max(1, currentPage - 2) + i;
+              if (pageNum <= totalPages) {
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => loadRecipes(pageNum)}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${currentPage === pageNum
+                      ? 'bg-blue-500 text-white shadow-lg'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border'
+                      }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              }
+              return null;
+            })}
+
+            {/* Next Button */}
+            <button
+              onClick={() => loadRecipes(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages || loading}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              Next →
+            </button>
+
+            <span className="text-sm text-gray-500">
+              Page {currentPage} of {totalPages}
+            </span>
+          </div>
+        )}
+
+
       </main>
     </div>
   );

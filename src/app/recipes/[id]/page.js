@@ -19,50 +19,50 @@ export default function RecipeDetail({ recipes = [] }) {
   // }, [params.id, recipes]);
 
   useEffect(() => {
-  // 1. TRY LOCAL RECIPES FIRST (instant)
-  const storedRecipes = sessionStorage.getItem('allRecipes');
-  if (storedRecipes) {
-    try {
-      const allRecipes = JSON.parse(storedRecipes);
-      const currentRecipe = allRecipes.find(r => r.id === params.id);
-      if (currentRecipe) {
-        setRecipe(currentRecipe);
-        return; // Found! Skip API call
+    // 1. TRY LOCAL RECIPES FIRST (instant)
+    const storedRecipes = sessionStorage.getItem('allRecipes');
+    if (storedRecipes) {
+      try {
+        const allRecipes = JSON.parse(storedRecipes);
+        const currentRecipe = allRecipes.find(r => r.id === params.id);
+        if (currentRecipe) {
+          setRecipe(currentRecipe);
+          return; // Found! Skip API call
+        }
+      } catch (e) {
+        console.log('Stored recipes invalid, falling back to API');
       }
-    } catch (e) {
-      console.log('Stored recipes invalid, falling back to API');
     }
-  }
 
-  // 2. FALLBACK to API (if local miss)
-  const fetchRecipe = async () => {
-    try {
-      const response = await fetch(`https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen/recipes/${params.id}`);
-      if (response.ok) {
-        const recipeData = await response.json();
-        setRecipe(recipeData);
+    // 2. FALLBACK to API (if local miss)
+    const fetchRecipe = async () => {
+      try {
+        const response = await fetch(`https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen/recipes/${params.id}`);
+        if (response.ok) {
+          const recipeData = await response.json();
+          setRecipe(recipeData);
+        }
+      } catch (error) {
+        console.error('API fetch failed:', error);
       }
-    } catch (error) {
-      console.error('API fetch failed:', error);
-    }
-  };
-  
-  fetchRecipe();
-}, [params.id]);
+    };
 
- 
+    fetchRecipe();
+  }, [params.id]);
+
+
 
   const handleCook = async () => {
     if (cooking) return;
     setCooking(true);
-    
+
     try {
       const response = await fetch(`https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen/recipes/${params.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...recipe, popularity: (recipe.popularity || 0) + 1 })
       });
-      
+
       if (response.ok) {
         setRecipe({ ...recipe, popularity: (recipe.popularity || 0) + 1 });
       }
@@ -77,7 +77,7 @@ export default function RecipeDetail({ recipes = [] }) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Recipe not found</h1>
-        <button 
+        <button
           onClick={() => router.push('/recipes')}
           className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all"
         >
@@ -87,15 +87,15 @@ export default function RecipeDetail({ recipes = [] }) {
     );
   }
 
-  const ingredients = Array.isArray(recipe.ingredients) 
+  const ingredients = Array.isArray(recipe.ingredients)
     ? recipe.ingredients.map((ingredient, index) => ({
-        name: ingredient.name || ingredient,
-        amount: ingredient.amount || ''
-      }))
+      name: ingredient.name || ingredient,
+      amount: ingredient.amount || ''
+    }))
     : (recipe.ingredients ? Object.entries(recipe.ingredients).map(([key, value]) => ({
-        name: key,
-        amount: value
-      })) : []);
+      name: key,
+      amount: value
+    })) : []);
 
   const steps = recipe.steps ? Object.values(recipe.steps).map((step, index) => ({
     number: step.number || (index + 1),
@@ -179,8 +179,11 @@ export default function RecipeDetail({ recipes = [] }) {
       </div>
 
       <div className="text-center pt-12">
-        <button 
-          onClick={() => router.push('/recipes')}
+        <button
+          onClick={() => {
+            const page = sessionStorage.getItem('currentPage') || '1';
+            router.push(`/recipes?page=${page}`);
+          }}
           className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
         >
           ← Back to All Recipes

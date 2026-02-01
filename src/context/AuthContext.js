@@ -3,45 +3,94 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
-  return context;
-}
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Check login status on mount
   useEffect(() => {
-    // Check localStorage on mount
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
+    const token = localStorage.getItem('authToken');
+    const savedUser = localStorage.getItem('currentUser');
+    
+    if (token && savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        localStorage.removeItem('user');
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+      } catch (error) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
       }
     }
     setLoading(false);
   }, []);
 
-  const login = (userData) => {
-    const fakeToken = `fake-jwt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const userWithToken = { ...userData, token: fakeToken };
-    localStorage.setItem('user', JSON.stringify(userWithToken));
-    setUser(userWithToken);
+  const login = async (email, password) => {
+    try {
+      const response = await fetch(
+        `https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen/users?email=${email}&password=${password}`
+      );
+      
+      if (response.ok) {
+        const users = await response.json();
+        if (users.length > 0) {
+          const userData = users[0];
+          const token = `${email}${password}`;
+          
+          localStorage.setItem('authToken', token);
+          localStorage.setItem('currentUser', JSON.stringify(userData));
+          setUser(userData);
+          return { success: true };
+        }
+      }
+      return { success: false, error: 'User not found. Please sign up!' };
+    } catch (error) {
+      return { success: false, error: 'Login failed' };
+    }
+  };
+
+  const signup = async (userData) => {
+    try {
+      const response = await fetch(
+        'https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen/users',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData),
+        }
+      );
+      
+      if (response.ok) {
+        const newUser = await response.json();
+        const token = `${userData.email}${userData.password}`;
+        
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+        setUser(newUser);
+        return { success: true };
+      }
+      return { success: false, error: 'Signup failed' };
+    } catch (error) {
+      return { success: false, error: 'Signup failed' };
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('favorites');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login, 
+      signup, 
+      logout, 
+      loading 
+    }}>
       {children}
     </AuthContext.Provider>
   );
 }
+
+export const useAuth = () => useContext(AuthContext);
