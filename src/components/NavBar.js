@@ -18,7 +18,7 @@ export default function Navbar() {
 
   if (loading || !isClient) {
     return (
-      <nav className="fixed h-full z-50 shadow-2xl border-r border-white/10 transition-all duration-300
+      <nav className="fixed h-full z-50 shadow-2xl transition-all duration-300
                   lg:w-[var(--navbar-w)] lg:bg-[var(--page-bg)] lg:px-[var(--padding)] lg:py-8 lg:flex lg:flex-col lg:gap-4 lg:rounded-r-lg
                   w-[var(--navbar-w-mobile)] bg-[var(--page-bg)] px-4 py-6 flex flex-col gap-3 rounded-r-lg">
 
@@ -31,78 +31,65 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed h-full z-50 shadow-2xl border-r border-white/10 transition-all duration-300
+    <nav className="fixed h-full z-50 shadow-2xl transition-all duration-300
                   lg:w-[var(--navbar-w)] lg:bg-[var(--page-bg)] lg:px-[var(--padding)] lg:py-8 lg:flex lg:flex-col lg:gap-4 lg:rounded-r-lg
-                  w-[var(--navbar-w-mobile)] bg-[var(--page-bg)] px-4 py-6 flex flex-col gap-3 rounded-r-lg">
+                  w-[var(--navbar-w-mobile)] bg-[var(--page-bg)] px-1 py-6 flex flex-col gap-3 rounded-r-lg">
 
-      <div className="w-12 h-12 lg:w-16 lg:h-16 bg-[var(--accent)] rounded mx-auto mb-6 lg:mb-8 
+      <div className="w-12 h-12 lg:w-16 lg:h-16 bg-[#DF2E38] rounded-full mx-auto mb-6 lg:mb-8 
                                  border-4 border-[var(--pane-bg)] text-xs font-bold shadow-lg flex items-center justify-center">
-        [LOGO]
+        <img src="/media/img/meal-lunch-svgrepo-com.svg" />
       </div>
 
       <div className="flex-1 flex flex-col gap-2 lg:gap-2">
-        <NavLink href="/" icon="🏠" label="Home" />
-        <NavLink href="/recipes" icon="🍳" label="Recipes" />
+        <NavLink href="/" icon="/media/img/home.svg" label="Home" />
+        <NavLink href="/recipes" icon="/media/img/recipes.svg" label="Recipes" />
 
         {user?.isChef && (
           <NavLink
             href="/create"
-            icon="👨‍🍳"
+            icon="/media/img/create.svg"
             label="Create Recipe"
           />
         )}
 
-        <NavLink href="/favorites" icon="❤️" label="Favorites" />
-        <NavLink href="/calculator" icon="🧮" label="Calculator" disabled />
-        <NavLink href="/community" icon="👥" label="Community" disabled />
+        <NavLink href="/favorites" icon="/media/img/favorites.svg" label="Favorites" />
+        <NavLink href="/calculator" icon="/media/img/calc.svg" label="Calculator" disabled />
+        <NavLink href="/community" icon="/media/img/community.svg" label="Community" disabled />
       </div>
 
-      {/* AUTH SECTION - PREMIUM KITCHEN STYLE */}
-      <div className="p-6 border-t border-gray-100/50 mt-auto space-y-3">
+      <div className="w-full space-y-3">
         {!user ? (
           <>
-            {/* LOGIN BUTTON - Gradient + Shadow */}
             <Link
               href="/login"
-              className="w-full block p-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-center backdrop-blur-sm border border-blue-500/30 flex items-center justify-center gap-2 h-14"
+              className="min-w-12 p-1 bg-[#ef4444] font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col lg:flex-row items-center justify-center gap-1 lg:gap-4"
             >
-              <span className="text-xl">🔐</span>
-              Login
+              <img src="/media/img/profile-2.svg" className="block w-8 h-8" />
+              <span className="block">Login</span>
             </Link>
 
-            {/* SEPARATOR */}
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-2" />
-
-            {/* SIGNUP BUTTON - Larger + More Prominent */}
             <Link
               href="/signup"
-              className="w-full block p-4 bg-gradient-to-r from-emerald-500 via-emerald-600 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-center backdrop-blur-sm border border-emerald-500/40 flex items-center justify-center gap-3 h-16"
+              className="min-w-12 p-1 bg-[#FFB100] font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col lg:flex-row items-center justify-center gap-1 lg:gap-4"
+            
             >
-              <span className="text-2xl">🍳</span>
-              Join the Kitchen!
+              <img src="/media/img/signup.svg" className="w-8 h-8" />
+              <span>SignUp</span>
             </Link>
           </>
         ) : (
           <div className="space-y-4 text-center">
-            {/* USER INFO CARD */}
-            <div className="p-5 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-2xl border border-blue-100/50 shadow-lg backdrop-blur-sm">
-              <div className="font-bold text-xl text-gray-900 mb-2 truncate">
-                👋 {user.firstName}
+            <div className="flex flex-col lg:flex-row justify-center items-center lg:gap-4 p-1 bg-white/50 rounded-2xl shadow-lg">
+              <div className="flex items-center justify-center">
+                {user.isChef? <img src="/media/img/recipe-svgrepo-com.svg" className="w-8 h-8" /> : <img src="/media/img/fried-chicken-meal-svgrepo-com" className="" />}
               </div>
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold ${user.role === 'chef'
-                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                : 'bg-blue-100 text-blue-800 border border-blue-200'
-                }`}>
-                {user.isChef? '👨‍🍳 Master Chef' : '🍳 Home Cook'}
-              </div>
+              <span className="font-bold"> {user.isChef? "Master Chef" : "Master Cook"} </span>
             </div>
 
-            {/* LOGOUT BUTTON */}
             <button
               onClick={handleLogout}
               className="w-full h-14 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-semibold text-lg rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 backdrop-blur-sm border border-red-400/30"
             >
-              <span className="text-xl">🚪</span>
               Logout
             </button>
           </div>
@@ -118,12 +105,12 @@ export default function Navbar() {
 function NavLink({ href, icon, label, disabled }) {
   return (
     <a href={disabled ? '#' : href} className={`
-      py-3 px-3 lg:px-4 rounded flex items-center gap-3 font-medium transition-all duration-200 hover:scale-[1.02]
+      py-3 px-3 lg:px-4 rounded flex items-center gap-4 font-medium transition-all duration-200 hover:scale-[1.02]
       text-white/80 hover:bg-white/10 hover:text-white shadow-md
       ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
     `}>
-      <div className="w-6 h-6 lg:w-6 lg:h-6 bg-[var(--accent)]/30 backdrop-blur-sm rounded flex items-center justify-center text-xs font-bold min-w-[24px]">
-        {icon}
+      <div className="w-10 h-10 p-2 bg-white rounded-full lg:w-8 lg:h-8 flex items-center justify-center text-xs font-bold ">
+        <img src={icon} className="w-10 h-10" />
       </div>
       <span className="hidden lg:inline">{label}</span>
     </a>

@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import RecipeCard from '@/components/RecipeCard'; // Adjust path if needed
+import RecipeCard from '@/components/RecipeCard';
 
 export default function FavoritesPage() {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
@@ -12,14 +12,12 @@ export default function FavoritesPage() {
   const { user } = useAuth();
   const RECIPES_PER_PAGE = 25;
 
-  // Load favorites from localStorage + filter recipes
   const loadFavorites = useCallback(() => {
     setLoading(true);
     try {
       const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       const allRecipes = JSON.parse(sessionStorage.getItem('allRecipes') || '[]');
       
-      // Filter recipes that match favorite IDs
       const favoriteList = allRecipes.filter(recipe => 
         favorites.includes(recipe.id)
       );
@@ -34,7 +32,6 @@ export default function FavoritesPage() {
     }
   }, []);
 
-  // Client-side pagination for favorites
   const paginatedFavorites = favoriteRecipes.slice(
     (currentPage - 1) * RECIPES_PER_PAGE,
     currentPage * RECIPES_PER_PAGE
@@ -42,7 +39,6 @@ export default function FavoritesPage() {
   
   const totalPages = Math.ceil(favoriteRecipes.length / RECIPES_PER_PAGE);
 
-  // Navigate to recipe detail
   const navigateToRecipe = (recipe) => {
     sessionStorage.setItem('allRecipes', JSON.stringify(favoriteRecipes));
     router.push(`/recipes/${recipe.id}`);
@@ -61,11 +57,10 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-emerald-50 py-12 px-4">
+    <div className="min-h-screen bg-[#FFD89C] py-12 px-4 rounded-xl">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#FD8D14] to-[#df2e38] bg-clip-text text-transparent mb-4">
             Your Favorites
           </h1>
           <p className="text-xl text-gray-600">
@@ -85,7 +80,6 @@ export default function FavoritesPage() {
           )}
         </div>
 
-        {/* Recipes Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
           {paginatedFavorites.map((recipe) => (
             <RecipeCard 
@@ -97,7 +91,6 @@ export default function FavoritesPage() {
           ))}
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 p-6">
             <button

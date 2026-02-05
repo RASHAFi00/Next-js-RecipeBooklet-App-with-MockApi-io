@@ -7,7 +7,6 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check login status on mount
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     const savedUser = localStorage.getItem('currentUser');
@@ -35,10 +34,9 @@ export function AuthProvider({ children }) {
         if (users.length > 0) {
           const userData = users[0];
 
-          // FIX: Normalize role to isChef boolean for frontend
           const normalizedUser = {
             ...userData,
-            isChef: userData.isChef === true || userData.role === 'chef' // Handle both cases
+            isChef: userData.isChef === true || userData.role === 'chef'
           };
 
           const token = `${email}${password}`;
@@ -56,11 +54,10 @@ export function AuthProvider({ children }) {
 
   const signup = async (userData) => {
     try {
-      // FIX: Convert role string to isChef boolean
       const normalizedUserData = {
         ...userData,
-        isChef: userData.isChef === 'chef', // true/false boolean
-        role: undefined // Remove role field
+        isChef: userData.isChef === 'chef',
+        role: undefined
       };
 
       const response = await fetch(

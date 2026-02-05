@@ -23,7 +23,6 @@ export default function CreateRecipePage() {
 
 
 
-  // Update image preview when URL changes
   useEffect(() => {
     if (formData.image) {
       setImagePreview(formData.image);
@@ -148,12 +147,11 @@ export default function CreateRecipePage() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 py-12 px-4">
+    <div className="min-h-screen bg-[#FFD89C] py-12 px-4 rounded-4xl">
       <div className="max-w-6xl mx-auto">
-        {/* HEADER */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 via-emerald-700 to-blue-600 bg-clip-text text-transparent mb-6">
-            👨‍🍳 Create Recipe
+          <h1 className="flex gap-8 justify-center items-center text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#FD8D14] to-[#df2e38] bg-clip-text text-transparent bg-clip-text text-transparent mb-6">
+            <img src="/media/img/recipe-book-svgrepo-com.svg" className="w-22 h-22" /> Create Recipe
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Share your culinary masterpiece!
@@ -161,27 +159,24 @@ export default function CreateRecipePage() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* TOP CONTAINER - Image + Basic Info */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 mb-12 border border-white/40 shadow-2xl">
+          <div className="bg-[#FFD9B7] rounded-3xl p-8 mb-12 shadow-2xl">
             <h2 className="text-3xl font-bold text-gray-900 mb-10 flex items-center gap-3 justify-center">
-              📸 Recipe Preview & Details
+              Recipe Preview & Details
             </h2>
 
             <div className="grid lg:grid-cols-2 gap-12 items-start">
-              {/* LEFT: Image Preview */}
               <div>
                 <label className="block text-xl font-semibold text-gray-700 mb-4">Recipe Image</label>
-                <div className="w-full h-80 lg:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border-4 border-dashed border-gray-300 hover:border-emerald-400 transition-all">
+                <div className="w-full h-80 lg:h-96 rounded-2xl overflow-hidden transition-all shadow-2xl">
                   <img
-                    src={imagePreview}
+                    src={imagePreview.length > 7 ? imagePreview : "placeholder.avif"}
                     alt="Preview"
                     className="w-full h-full object-cover"
-                    onError={(e) => e.target.src = '/placeholder-recipe.jpg'}
+                    onError={(e) => e.target.src = '/media/img/placeholder.avif'}
                   />
                 </div>
               </div>
 
-              {/* RIGHT: Basic Fields */}
               <div className="space-y-6">
                 <div>
                   <label className="block text-lg font-semibold text-gray-700 mb-3">Image URL</label>
@@ -190,7 +185,7 @@ export default function CreateRecipePage() {
                     name="image"
                     value={formData.image}
                     onChange={handleInputChange}
-                    className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-3 focus:ring-emerald-500/30 focus:border-emerald-500 bg-white/50 transition-all text-lg"
+                    className="w-full px-5 py-4 border border-[#674636] rounded-xl bg-white/50 transition-all text-lg"
                     placeholder="https://example.com/recipe-image.jpg"
                   />
                 </div>
@@ -203,7 +198,7 @@ export default function CreateRecipePage() {
                     value={formData.title}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-3 focus:ring-emerald-500/30 focus:border-emerald-500 bg-white/50 transition-all text-xl font-semibold"
+                    className="w-full px-5 py-4 border border-[#674636] rounded-xl bg-white/50 transition-all text-xl font-semibold"
                   />
                 </div>
 
@@ -215,7 +210,7 @@ export default function CreateRecipePage() {
                     onChange={handleInputChange}
                     required
                     rows={3}
-                    className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-3 focus:ring-emerald-500/30 focus:border-emerald-500 bg-white/50 transition-all"
+                    className="w-full px-5 py-4 border border-[#674636] rounded-xl bg-white/50 transition-all"
                   />
                 </div>
 
@@ -227,7 +222,7 @@ export default function CreateRecipePage() {
                     value={formData.prepareTime}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-3 focus:ring-emerald-500/30 focus:border-emerald-500 bg-white/50 transition-all"
+                    className="w-full px-5 py-4 border border-[#674636] rounded-xl bg-white/50 transition-all"
                     placeholder="30 minutes"
                   />
                 </div>
@@ -235,89 +230,86 @@ export default function CreateRecipePage() {
             </div>
           </div>
 
-            {/* INGREDIENTS */}
-            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-3xl p-8 mb-8 border border-orange-200/50 shadow-2xl">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">🧂 Ingredients</h3>
-                <button
-                  type="button"
-                  onClick={addIngredient}
-                  className="px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
-                >
-                  ➕ Add
-                </button>
-              </div>
-              <div className="space-y-3">
-                {ingredients.map((ingredient, index) => (
-                  <div key={index} className="flex items-center gap-3 p-4 bg-white/60 rounded-xl">
-                    <input
-                      type="text"
-                      value={ingredient}
-                      onChange={(e) => updateIngredient(index, e.target.value)}
-                      className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-400 bg-white"
-                      placeholder={`Ingredient ${index + 1}`}
-                    />
-                    {ingredients.length > 1 && (
+          <div className="bg-[#FFD9B7] rounded-3xl p-8 mb-8 border border-orange-200/50 shadow-2xl">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">Ingredients</h3>
+              <button
+                type="button"
+                onClick={addIngredient}
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+              >
+                Add Ingredient
+              </button>
+            </div>
+            <div className="space-y-3">
+              {ingredients.map((ingredient, index) => (
+                <div key={index} className="flex items-center gap-3 p-4 bg-white/60 rounded-xl">
+                  <input
+                    type="text"
+                    value={ingredient}
+                    onChange={(e) => updateIngredient(index, e.target.value)}
+                    className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-400 bg-white"
+                    placeholder={`Ingredient ${index + 1}`}
+                  />
+                  {ingredients.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeIngredient(index)}
+                      className="px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg"
+                    >
+                      <img src="/media/img/trash.svg" className="w-6 h-6" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-[#FFD9B7] rounded-3xl p-8 mb-12 border border-purple-200/50 shadow-2xl">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">📋 Steps</h3>
+              <button
+                type="button"
+                onClick={addStep}
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+              >
+                Add Step
+              </button>
+            </div>
+            <div className="space-y-4">
+              {steps.map((step, index) => (
+                <div key={index} className="bg-white/60 p-6 rounded-2xl border border-purple-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-500">Step {index + 1}</span>
+                    {steps.length > 1 && (
                       <button
                         type="button"
-                        onClick={() => removeIngredient(index)}
-                        className="px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg"
+                        onClick={() => removeStep(index)}
+                        className="px-3 py-1 text-red-500 hover:text-red-600 font-semibold rounded-lg hover:bg-red-50 text-sm"
                       >
-                        🗑️
+                        <img src="/media/img/trash.svg" className="w-6 h-6" />
                       </button>
                     )}
                   </div>
-                ))}
-              </div>
+                  <input
+                    type="text"
+                    value={step.title}
+                    onChange={(e) => updateStep(index, 'title', e.target.value)}
+                    placeholder="Step title"
+                    className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-400 bg-white"
+                  />
+                  <textarea
+                    value={step.description}
+                    onChange={(e) => updateStep(index, 'description', e.target.value)}
+                    placeholder="Step description"
+                    rows={3}
+                    className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-400 bg-white"
+                  />
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* STEPS - NO FIXED HEIGHT */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-8 mb-12 border border-purple-200/50 shadow-2xl">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">📋 Steps</h3>
-                <button
-                  type="button"
-                  onClick={addStep}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
-                >
-                  ➕ Add Step
-                </button>
-              </div>
-              <div className="space-y-4"> {/* REMOVED max-h + overflow */}
-                {steps.map((step, index) => (
-                  <div key={index} className="bg-white/60 p-6 rounded-2xl border border-purple-200 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-500">Step {index + 1}</span>
-                      {steps.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeStep(index)}
-                          className="px-3 py-1 text-red-500 hover:text-red-600 font-semibold rounded-lg hover:bg-red-50 text-sm"
-                        >
-                          🗑️
-                        </button>
-                      )}
-                    </div>
-                    <input
-                      type="text"
-                      value={step.title}
-                      onChange={(e) => updateStep(index, 'title', e.target.value)}
-                      placeholder="Step title"
-                      className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-400 bg-white"
-                    />
-                    <textarea
-                      value={step.description}
-                      onChange={(e) => updateStep(index, 'description', e.target.value)}
-                      placeholder="Step description"
-                      rows={3}
-                      className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-400 bg-white"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          {/* SUBMIT + ERROR */}
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-8 py-6 rounded-3xl text-lg mb-8 text-center">
               {error}
@@ -327,15 +319,16 @@ export default function CreateRecipePage() {
           <button
             type="submit"
             disabled={loadingSubmit}
-            className="w-full lg:max-w-2xl lg:mx-auto h-16 bg-gradient-to-r from-emerald-500 via-emerald-600 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-bold text-xl rounded-3xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all mx-auto block"
+            className="flex gap-6 items-center justify-center w-full lg:max-w-2xl lg:mx-auto h-16 bg-gradient-to-r from-[#FD8D14] to-[#df2e38] text-white font-bold text-xl rounded-3xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all mx-auto block"
           >
+            <img src="/media/img/recipe-svgrepo-com.svg" className="w-12 h-12" />
             {loadingSubmit ? (
               <>
                 <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 Publishing...
               </>
             ) : (
-              '🍳 Publish My Masterpiece!'
+              'Publish My Masterpiece!'
             )}
           </button>
         </form>

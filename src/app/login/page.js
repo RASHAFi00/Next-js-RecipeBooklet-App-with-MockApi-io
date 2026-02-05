@@ -27,10 +27,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-emerald-50 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12 border border-white/50">
+    <div className="min-h-screen bg-[#FFD89C] flex items-center justify-center py-12 px-4">
+      <div className="max-w-md w-full bg-[#FFD9B7] rounded-2xl shadow-xl p-8 md:p-12">
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#df2e38] to-[#FD8D14] bg-clip-text text-transparent mb-4">
             Welcome Back
           </h1>
           <p className="text-gray-600">Sign in to your kitchen account</p>
@@ -52,7 +52,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-[#674636] rounded-xl focus:ring-2 focus:border-transparent transition-all"
               placeholder="your@email.com"
             />
           </div>
@@ -66,7 +66,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-[#674636] rounded-xl focus:ring-2 focus:border-transparent transition-all"
               placeholder="••••••••"
             />
           </div>
@@ -74,7 +74,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-[#df2e38] to-[#FD8D14] hover:from-[#FD8D14] hover:to-[#df2e38] text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
