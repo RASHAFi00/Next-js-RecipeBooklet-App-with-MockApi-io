@@ -106,7 +106,7 @@ export default function RecipeDetail({ recipes = [] }) {
       <div className="bg-[#FFD89C] backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-10 border border-white/50">
         <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center">
           <div className="flex-shrink-0 w-full lg:w-80 h-52 lg:h-64 flex items-center justify-center border-blue-200">
-            <img src={recipe.image || "/placeholder.avif"} className="block rounded-lg" />
+            <img src={recipe.image || "/placeholder.svg"} className="block rounded-lg" />
           </div>
           <div className="flex-1 space-y-4">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">{recipe.title}</h1>

@@ -169,10 +169,10 @@ export default function CreateRecipePage() {
                 <label className="block text-xl font-semibold text-gray-700 mb-4">Recipe Image</label>
                 <div className="w-full h-80 lg:h-96 rounded-2xl overflow-hidden transition-all shadow-2xl">
                   <img
-                    src={imagePreview.length > 7 ? imagePreview : "placeholder.avif"}
+                    src={imagePreview.length > 7 ? imagePreview : "placeholder.svg"}
                     alt="Preview"
                     className="w-full h-full object-cover"
-                    onError={(e) => e.target.src = '/media/img/placeholder.avif'}
+                    onError={(e) => e.target.src = '/media/img/placeholder.svg'}
                   />
                 </div>
               </div>

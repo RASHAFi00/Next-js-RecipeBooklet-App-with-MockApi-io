@@ -94,7 +94,7 @@ export default function Home() {
                 <div className="h-full flex items-center justify-center px-6 sm:px-4 lg:px-20">
                   <div className="w-full max-w-4xl flex flex-col lg:flex-row sm:gap-6 lg:gap-12 items-center group-hover:scale-[1.02] transition-all duration-500">
                     <div className="flex-shrink-0 w-80 h-60 w-full lg:w-96 lg:h-96 flex items-center justify-center group-hover:shadow-3xl transition-all duration-700">
-                      <img src={ (recipe.image.length<10)? "/media/img/placeholder.avif" : recipe.image } className="block rounded-xl shadow-xl" onError={(e)=> e.target.src="/media/img/placeholder.avif"} />
+                      <img src={ (recipe.image.length<10)? "/media/img/placeholder.svg" : recipe.image } className="block rounded-xl shadow-xl" onError={(e)=> e.target.src="/media/img/placeholder.svg"} />
                     </div>
 
                     <div className="flex-1 text-center lg:text-left space-y-6 lg:max-w-lg">

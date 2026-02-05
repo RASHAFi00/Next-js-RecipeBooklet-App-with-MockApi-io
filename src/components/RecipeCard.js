@@ -41,7 +41,7 @@ export default function RecipeCard({ recipe, isAuth, onRecipeClick }) {
     >
       <div className="w-full h-40 md:h-48 bg-gradient-to-br from-[#FFE52A] to-[#FCB53B] rounded-xl mb-4 flex items-center justify-center text-sm text-gray-500 group-hover:border-blue-300 transition-colors">
         <img
-          src={ (recipe.image.length<10)? "https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/f33d5e96-f960-486f-94ac-cbabe3074ead/Derivates/0454bd7c-c1e3-4010-9a74-39aa130417ba.jpg" : recipe.image }
+          src={ (recipe.image.length<10)? "/media/img/placeholder.svg" : recipe.image }
           alt="Card Img Preview"
           className="w-full h-full object-cover rounded-xl"
         />
