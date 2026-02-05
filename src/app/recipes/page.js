@@ -75,7 +75,8 @@ export default function RecipesPage() {
 
   console.log(totalPages);
   return (
-    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8  max-w-7xl mx-auto  overflow-auto lg:overflow-hidden bg-[#FFD89C] p-3 h-full">
+    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 overflow-auto lg:overflow-hidden bg-[#FFD89C] p-3 w-full h-full">
+
       <aside className="w-full lg:w-80 backdrop-blur-sm rounded-lg p-4 lg:p-6 shadow-xl lg:sticky lg:top-6 lg:self-start lg:shrink-0 order-1">
         <h2 className="text-lg lg:text-xl font-bold mb-4 lg:mb-6 text-gray-800">Filters</h2>
         <div className="space-y-4">
@@ -212,6 +213,8 @@ export default function RecipesPage() {
 
 
       </main>
+
+
     </div>
   );
 

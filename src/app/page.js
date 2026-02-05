@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import { fetchRecipes } from '@/lib/api';
 import RecipeCard from '@/components/RecipeCard';
 import Link from 'next/link';
+import { useRecipeNavigation } from '@/lib/useRecipeNavigation';
 
 export default function Home() {
   const [topRecipes, setTopRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { navigateToRecipe } = useRecipeNavigation(topRecipes.data, 1);
 
   useEffect(() => {
     async function loadTopRecipes() {
@@ -43,12 +45,9 @@ export default function Home() {
     );
   }
 
-  console.log(" TRUE FORM : " , topRecipes.data);
+  console.log(" TRUE FORM : ", topRecipes.data);
   const top5Slides = topRecipes.data.slice(0, 5);
   const remaining10 = topRecipes.data.slice(5, 15);
-
-  // const top5Slides = [];
-  // const remaining10 = [];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FBE580] via-[#EBE1D1] to-[#FFFDE1]">
@@ -65,7 +64,7 @@ export default function Home() {
           <Link
             href="/recipes"
             className="px-12 py-5 bg-gradient-to-r from-[#FE5D26] to-[#FF3F33] text-white text-xl font-bold rounded-3xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300">
-              Browse All Recipes
+            Browse All Recipes
           </Link>
 
 
@@ -94,7 +93,7 @@ export default function Home() {
                 <div className="h-full flex items-center justify-center px-6 sm:px-4 lg:px-20">
                   <div className="w-full max-w-4xl flex flex-col lg:flex-row sm:gap-6 lg:gap-12 items-center group-hover:scale-[1.02] transition-all duration-500">
                     <div className="flex-shrink-0 w-80 h-60 w-full lg:w-96 lg:h-96 flex items-center justify-center group-hover:shadow-3xl transition-all duration-700">
-                      <img src={ (recipe.image.length<10)? "/media/img/placeholder.svg" : recipe.image } className="block rounded-xl shadow-xl" onError={(e)=> e.target.src="/media/img/placeholder.svg"} />
+                      <img src={(recipe.image.length < 10) ? "/media/img/placeholder.svg" : recipe.image} className="block rounded-xl shadow-xl" onError={(e) => e.target.src = "/media/img/placeholder.svg"} />
                     </div>
 
                     <div className="flex-1 text-center lg:text-left space-y-6 lg:max-w-lg">
@@ -135,8 +134,8 @@ export default function Home() {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide
-                    ? 'w-8 bg-white shadow-lg scale-110'
-                    : 'bg-white/60 hover:bg-white hover:scale-110'
+                  ? 'w-8 bg-white shadow-lg scale-110'
+                  : 'bg-white/60 hover:bg-white hover:scale-110'
                   }`}
               />
             ))}
@@ -161,7 +160,7 @@ export default function Home() {
 
         <div className="flex flex-wrap gap-4 justify-center items-center">
           {remaining10.map(recipe => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard key={recipe.id} recipe={recipe} onRecipeClick={() => navigateToRecipe(recipe)} />
           ))}
         </div>
 
@@ -172,7 +171,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="bg-gradient-to-t from-[#FBE580] to-[#FFFDE1] py-20 px-6 rounded-4xl">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-[#FFE52A] via-[#F79A19] to-[#CF0F0F] p-1 rounded-full flex items-center justify-center shadow-2xl">
@@ -183,11 +181,12 @@ export default function Home() {
 
           <div className="max-w-2xl mx-auto space-y-4 text-lg leading-relaxed text-gray-800">
             <p>
-              This experimental app showcases the power of <strong>AI-assisted development</strong> combined with modern web technologies.
+              This is a Recipe Booklet Page with role-based dynamic content render, 
+              api powered data retrieval and save, local storage favorites, 
+              some parts of this project where reused from templates, more features are coming soon.
             </p>
             <p>
-              Built with <strong>React + Next.js + Tailwind CSS</strong>, powered by <strong>MockAPI</strong> for real-time data,
-              and featuring <strong>AI-generated UI components</strong> for rapid prototyping.
+              Built with <strong>Next.js + Tailwind CSS</strong>, powered by <strong>MockAPI</strong> for real-time data.
             </p>
             <p>
               Explore <strong>Recipes</strong>, save <strong>Favorites</strong>, track <strong>Popularity</strong>,
@@ -201,7 +200,7 @@ export default function Home() {
             <Link href="/login" className="px-6 py-3 bg-[#F79A19] hover:bg-[#CF0F0F] hover:text-white rounded-xl transition-all font-medium">Sign In</Link>
           </div>
 
-          <p className="text-sm text-gray-500">&copy; 2026 Recipe Kitchen - AI-Powered Cooking Experiment</p>
+          <p className="text-sm text-gray-500">&copy; 2026 Recipe Kitchen - Mohammad Rashafi</p>
         </div>
       </footer>
     </div>
