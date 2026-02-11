@@ -20,9 +20,9 @@ export default function Navbar() {
     return (
       <nav className="fixed h-full z-50 shadow-2xl transition-all duration-300
                   lg:w-[var(--navbar-w)] lg:bg-[var(--page-bg)] lg:px-[var(--padding)] lg:py-8 lg:flex lg:flex-col lg:gap-4 lg:rounded-r-lg
-                  w-[var(--navbar-w-mobile)] bg-[var(--page-bg)] px-4 py-6 flex flex-col gap-3 rounded-r-lg">
+                  w-[var(--navbar-w-mobile)] bg-[var(--page-bg)] px-1 py-6 flex flex-col gap-3 rounded-r-lg">
 
-        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-[var(--accent)] rounded mx-auto mb-6 lg:mb-8 
+        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-[#DF2E38] rounded-full mx-auto mb-6 lg:mb-8 
                                  border-4 border-[var(--pane-bg)] text-xs font-bold shadow-lg flex items-center justify-center">
           <span className="text-sm text-gray-500">Loading...</span>
         </div>
@@ -81,7 +81,7 @@ export default function Navbar() {
           <div className="space-y-4 text-center">
             <div className="flex flex-col lg:flex-row justify-center items-center lg:gap-4 p-1 bg-white/50 rounded-2xl shadow-lg">
               <div className="flex items-center justify-center">
-                {user.isChef? <img src="/media/img/recipe-svgrepo-com.svg" className="w-8 h-8" /> : <img src="/media/img/fried-chicken-meal-svgrepo-com" className="" />}
+                {user.isChef? <img src="/media/img/recipe-svgrepo-com.svg" className="w-8 h-8" /> : <img src="/media/img/fried-chicken-meal-svgrepo-com.svg" className="w-8 h-8" />}
               </div>
               <span className="font-bold"> {user.isChef? "Master Chef" : "Master Cook"} </span>
             </div>

@@ -22,12 +22,14 @@ export default function RecipesPage() {
   const { user } = useAuth();
 
 
-  const loadRecipes = useCallback(async (page = 1, appliedFilters = filters) => {
+  const loadRecipes = useCallback(async (page = sessionStorage.getItem("currentPage"), appliedFilters = filters) => {
     setLoading(true);
+
+    console.log(sessionStorage.getItem("currentPage"));
 
     try {
       let data;
-      data = await fetchRecipes(appliedFilters, 1);
+      data = await fetchRecipes(appliedFilters);
       if (page === 1) {
         const estimatedTotal = data.total;
         data.data = Array.from(data.data || []).filter(recipe => recipe && recipe.id).slice(0, 25)

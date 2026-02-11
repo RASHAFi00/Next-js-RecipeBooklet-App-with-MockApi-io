@@ -1,6 +1,6 @@
 const API_BASE = 'https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen';
 
-export async function fetchRecipes(filters = {}, page = 1, limit = null) {
+export async function fetchRecipes(filters = {}, page = 1, limit) {
   const params = new URLSearchParams();
   
   if (filters.rating && filters.rating !== '') {

@@ -7,9 +7,6 @@ export default function FavoriteButton({ recipeId}) {
   const { user } = useAuth();
   const isAuth = !!user
 
-  console.log('User:', user, 'isAuth:', !!user);
-
-
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     setIsFavorited(favorites.includes(recipeId));
