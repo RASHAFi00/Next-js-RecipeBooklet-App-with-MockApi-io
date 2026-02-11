@@ -77,9 +77,9 @@ export default function RecipeDetail({ recipes = [] }) {
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Recipe not found</h1>
         <button
           onClick={() => router.push('/recipes')}
-          className="px-6 py-2 bg-[#FD8D14] text-white rounded-xl hover:bg-[#C51605] transition-all"
+          className="cursor-pointer px-6 py-2 bg-[#FD8D14] text-white rounded-xl hover:bg-[#C51605] transition-all"
         >
-          ← Back to recipes
+          Back to recipes
         </button>
       </div>
     );
@@ -121,14 +121,26 @@ export default function RecipeDetail({ recipes = [] }) {
             <button
               onClick={handleCook}
               disabled={cooking}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#df2e38] hover:bg-[#FD8D14] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50"
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#df2e38] hover:bg-[#FD8D14] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50"
             >
               <span> <img src="/media/img/tray-meal-svgrepo-com.svg" className="block w-10 h-10" /> </span>
               I Cooked This! (+1)
               {cooking && <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin ml-1" />}
             </button>
 
-            <FavoriteButton recipeId={recipe.id}/>
+            <div className="flex fle-wrap gap-2 lg:gap-4 items-center justify-center">
+              <button
+                onClick={() => {
+                  const page = sessionStorage.getItem('currentPage') || '1';
+                  router.push(`/recipes?page=${page}`);
+                }}
+                className="cursor-pointer px-8 py-3 bg-[#FD8D14] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+              >
+                Back to All Recipes
+              </button>
+
+                <FavoriteButton recipeId={recipe.id} />
+            </div>
 
           </div>
         </div>
@@ -160,7 +172,7 @@ export default function RecipeDetail({ recipes = [] }) {
           Cooking Steps ({steps.length})
         </h2>
         <div className="flex flex-col gap-6">
-          {steps.map((step,index) => (
+          {steps.map((step, index) => (
             <div key={index} className="p-6 bg-[#FFD9B7] backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl border border-white/50 hover:-translate-y-1 transition-all">
               <div className="flex items-start gap-4">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0 mt-1">
@@ -182,9 +194,9 @@ export default function RecipeDetail({ recipes = [] }) {
             const page = sessionStorage.getItem('currentPage') || '1';
             router.push(`/recipes?page=${page}`);
           }}
-          className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+          className="cursor-pointer px-8 py-3 bg-[#FD8D14] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
         >
-          ← Back to All Recipes
+          Back to All Recipes
         </button>
       </div>
     </div>
