@@ -1,6 +1,6 @@
 const API_BASE = 'https://697a4f180e6ff62c3c5914b5.mockapi.io/api/kitchen';
 
-export async function fetchRecipes(filters = {}, page = 1, limit) {
+export async function fetchRecipes(filters = {}, page, limit) {
   const params = new URLSearchParams();
   
   if (filters.rating && filters.rating !== '') {
@@ -13,7 +13,7 @@ export async function fetchRecipes(filters = {}, page = 1, limit) {
   if (filters.orderBy) params.append('orderBy', filters.orderBy);
   if (filters.order) params.append('order', filters.order);
 
-  params.append('page', page.toString());
+  if(page) params.append('page', page.toString());
   if (limit) params.append('limit', limit.toString());
   
   const url = `${API_BASE}/recipes?${params}`;
@@ -34,7 +34,7 @@ export async function fetchRecipes(filters = {}, page = 1, limit) {
 
   return {
     data: transformedData,
-    total: data.length * page,
+    total: data.length,
     page,
     limit
   };

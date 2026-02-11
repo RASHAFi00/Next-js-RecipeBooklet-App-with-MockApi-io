@@ -11,13 +11,6 @@ export default function RecipeDetail({ recipes = [] }) {
   const [cooking, setCooking] = useState(false);
   const { user } = useAuth();
 
-  // useEffect(() => {
-  //   const currentRecipe = recipes.find(r => r.id === params.id);
-  //   if (currentRecipe) {
-  //     setRecipe(currentRecipe);
-  //   }
-  // }, [params.id, recipes]);
-
   useEffect(() => {
     const storedRecipes = sessionStorage.getItem('allRecipes');
     if (storedRecipes) {
@@ -131,8 +124,7 @@ export default function RecipeDetail({ recipes = [] }) {
             <div className="flex fle-wrap gap-2 lg:gap-4 items-center justify-center">
               <button
                 onClick={() => {
-                  const page = sessionStorage.getItem('currentPage') || '1';
-                  router.push(`/recipes?page=${page}`);
+                  router.push(`/recipes`);
                 }}
                 className="cursor-pointer px-8 py-3 bg-[#FD8D14] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
               >
@@ -191,8 +183,7 @@ export default function RecipeDetail({ recipes = [] }) {
       <div className="text-center pt-12">
         <button
           onClick={() => {
-            const page = sessionStorage.getItem('currentPage') || '1';
-            router.push(`/recipes?page=${page}`);
+            router.push(`/recipes`);
           }}
           className="cursor-pointer px-8 py-3 bg-[#FD8D14] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
         >

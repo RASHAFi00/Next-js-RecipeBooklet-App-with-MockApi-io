@@ -8,8 +8,16 @@ import RecipeCard from '@/components/RecipeCard';
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const storedPage = sessionStorage.getItem("currentPage");
+      return storedPage ? parseInt(storedPage) || 1 : 1;
+    }
+    return 1;
+  }
+  );
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalRecipes, setTotalRecipes] = useState(0);
   const [filterLoading, setFilterLoading] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
@@ -22,52 +30,53 @@ export default function RecipesPage() {
   const { user } = useAuth();
 
 
-  const loadRecipes = useCallback(async (page = sessionStorage.getItem("currentPage"), appliedFilters = filters) => {
+  const loadRecipes = useCallback(async (page, appliedFilters = filters) => {
     setLoading(true);
 
-    console.log(sessionStorage.getItem("currentPage"));
+    console.log("Current Page From Session : ", sessionStorage.getItem("currentPage"));
 
     try {
-      let data;
-      data = await fetchRecipes(appliedFilters);
-      if (page === 1) {
-        const estimatedTotal = data.total;
-        data.data = Array.from(data.data || []).filter(recipe => recipe && recipe.id).slice(0, 25)
-        setTotalPages(Math.ceil(estimatedTotal / 25));
-      } else {
-        data = await fetchRecipes(appliedFilters, page, 25);
-      }
-      setRecipes(Array.isArray(data) ? data : (data.data || []));
+
+      sessionStorage.setItem("currentPage", page);
+
+      let data = await fetchRecipes(appliedFilters);
+      const estimatedTotal = data.total;
+
+      setTotalRecipes(estimatedTotal);
+      setTotalPages(Math.ceil(estimatedTotal / 25));
       setCurrentPage(page);
+
+      if (page === 1) {
+        data.data = Array.from(data.data || []).filter(recipe => recipe && recipe.id).slice(0, 25)
+        console.log("default page 1");
+      } else {
+        data = await fetchRecipes(appliedFilters, currentPage, 25);
+      }
+
+      setRecipes(Array.isArray(data) ? data : (data.data || []));
+
     } catch (error) {
       console.error('Failed to fetch:', error);
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, currentPage, setCurrentPage, setRecipes]);
 
 
   const applyFilters = useCallback(() => {
     setFilterLoading(true);
     setRecipes([]);
-    setCurrentPage(1);
 
+    loadRecipes(1, filters);
 
-    fetchRecipes(filters)
-      .then(data => {
-        setRecipes(data.data);
-        setCurrentPage(1);
-      })
-      .catch(err => {
-        console.error('Filter error (ignored):', err.message);
-      })
-      .finally(() => setFilterLoading(false));
-  }, [filters]);
+    setFilterLoading(false);
+
+  }, [filters, loadRecipes]);
 
 
   useEffect(() => {
-    loadRecipes(currentPage);
-  }, [currentPage, fetchRecipes]);
+    loadRecipes(currentPage, filters);
+  }, [currentPage, loadRecipes, filters]);
 
   const navigateToRecipe = (recipe) => {
     sessionStorage.setItem('allRecipes', JSON.stringify(recipes));
@@ -75,7 +84,7 @@ export default function RecipesPage() {
     router.push(`/recipes/${recipe.id}`);
   };
 
-  console.log(totalPages);
+  console.log("Total Pages : ", totalPages);
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 overflow-auto lg:overflow-hidden bg-[#FFD89C] p-3 w-full h-full">
 
@@ -154,10 +163,10 @@ export default function RecipesPage() {
       <main className="flex-1 space-y-4 lg:space-y-8 order-2 lg:overflow-y-auto h-full relative">
         <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 lg:mb-8 gap-2">
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mt-4 bg-gradient-to-r from-[#FD8D14] to-[#df2e38] bg-clip-text text-transparent">All Recipes</h1>
-          <span className="text-xs lg:text-sm text-gray-500">{recipes.length} recipes</span>
+          <span className="text-xs lg:text-sm text-gray-500">{totalRecipes} recipes</span>
         </header>
 
-        {recipes.length === 0 ? (
+        {totalRecipes === 0 ? (
           <div className="col-span-full text-center py-16 text-gray-500">
             No recipes found matching your filters. Try adjusting them.
           </div>
